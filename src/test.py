@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-from src.cotoha_api.cotoha_api import CotohaApi, get_config
+from src.cotoha_api.cotoha_api import CotohaApi
 from src.logger.logger import logger_initialze, LoggerUtils
 
 
@@ -12,4 +12,5 @@ if __name__ == "__main__":
     logger.info(f"{EQUAL_STR} START {EQUAL_STR}")
 
     cotoha = CotohaApi()
+    cotoha.architecture_analyze_api('昨日母と銀座で焼肉を食べた')
     logger.info(f"{EQUAL_STR} END {EQUAL_STR}")

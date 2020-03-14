@@ -1,38 +1,35 @@
 from configparser import ConfigParser
-from typing import Tuple
+from typing import Tuple, Any, Dict
 
 from requests import post
 from requests import Response
 
+from src.abstract.cotoha_abs import CotohaAbc, get_config
 from src.logger.logger import LoggerUtils
 
-CONFIG_FILE_PATH = "/Users/Hiroki/Applications/PythonProjects/cotoha_test/src/setting/setting.conf"
-CONFIG_KEY = "settings"
 
-
-class CotohaApi:
-    
+class CotohaApi(CotohaAbc):
     def __init__(self, client_id: str = None, client_secret: str = None) -> None:
         """
         class cotoha api.
         :rtype: object
-        :param client_id: 
-        :param client_secret: 
+        :param client_id:
+        :param client_secret:
         """
-        self.__url = "https://api.ce-cotoha.com/api/dev/"
+        super().__init__()
+        self.__url = "https://api.ce-cotoha.com/api/dev"
         self.__access_token_publish_url = "https://api.ce-cotoha.com/v1/oauth/accesstokens"
         self.__client_id = client_id
         self.__client_secret = client_secret
         self.__access_token = ""
-        self.logger = LoggerUtils.get_instance()
+        self.__logger = LoggerUtils.get_instance()
         if self.__client_id is None:
             self.__client_id, _ = get_config()
         if self.__client_secret is None:
             _, self.__client_secret = get_config()
-
         self.get_access_token()
 
-    def get_access_token(self):
+    def get_access_token(self) -> None:
         """
         get Access token
         {
@@ -44,7 +41,7 @@ class CotohaApi:
         }
         """
         header = {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json;charset=UTF-8"
         }
         payload = {
             "grantType": "client_credentials",
@@ -52,20 +49,23 @@ class CotohaApi:
             "clientSecret": self.__client_secret
         }
         response: Response = post(self.__access_token_publish_url, headers=header, json=payload)
-        self.logger.debug(f'Response: {response.json()}')
+        self.__logger.debug(f'Response: {response.json()}')
         self.__access_token = response.json().get('access_token')
+        return
 
-    def __str__(self):
-        s = (
-            f"URI: {self.__url}\n"
-            f"Access token: {self.__access_token_publish_url}\n"
-        )
+    def architecture_analyze_api(self, sentence: str) -> Dict[str, Any]:
+        self.__logger.debug(self)
+        header = {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Authorization": f"Bearer {self.__access_token}"
+        }
+        payload = {
+            "sentence": sentence
+        }
+        response: Response = post(self.__url + '/nlp/v1/parse', headers=header, json=payload)
+        self.__logger.debug(f'Response: {response.json()}')
+
+    def __str__(self) -> str:
+        s = (f"uri: {self.__url}, "
+             f"access token: {self.__access_token}")
         return s
-
-
-def get_config() -> Tuple[str, str]:
-    config = ConfigParser()
-    config.read(CONFIG_FILE_PATH)
-
-    settings = config[CONFIG_KEY]
-    return settings.get('client_id'), settings.get('client_secret')
