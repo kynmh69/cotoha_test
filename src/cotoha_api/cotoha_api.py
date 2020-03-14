@@ -1,12 +1,10 @@
-import json
-from configparser import ConfigParser
 from enum import Enum, auto
-from typing import Tuple, Any, Dict, List
+from typing import Any, Dict, List
 
-from requests import post
 from requests import Response
+from requests import post
 
-from src.abstract.cotoha_abs import CotohaApiAbc, get_config, CotohaResponseAbc
+from src.abstract.cotoha_abs import CotohaApiAbc, CotohaResponseAbc
 from src.logger.logger import LoggerUtils
 
 
@@ -73,7 +71,21 @@ class CotohaApi(CotohaApiAbc):
             "type": req_body
         }
         response: Response = post(self.uri + '/nlp/v1/parse', headers=header, json=payload)
-        self.__logger.info(f'Response: {response.json()}')
+        self.__logger.debug(f'Response: {response.json()}')
+        return CotohaApiResponse(response.json().get('result'), response.json().get('status'),
+                                 response.json().get('message'))
+
+    def sentiment(self, sentence: str) -> CotohaApiResponse:
+        self.__logger.debug(self)
+        header = {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Authorization": f"Bearer {self.access_token}"
+        }
+        payload = {
+            "sentence": sentence
+        }
+        response: Response = post(self.uri + '/nlp/v1/sentiment', headers=header, json=payload)
+        self.__logger.debug(f'Response: {response.json()}')
         return CotohaApiResponse(response.json().get('result'), response.json().get('status'),
                                  response.json().get('message'))
 

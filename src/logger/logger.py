@@ -4,7 +4,7 @@ from logging import DEBUG, Formatter, StreamHandler, getLogger, FileHandler, INF
 
 class LoggerUtils:
     """
-    First call def logger_initialze(self).
+    First call def logger_initialize(self).
     and use get_instance.
 
     """
@@ -30,7 +30,7 @@ def logger_initialize():
     logger initializer
     """
     date_time = datetime.now().strftime("%Y%m%d%H%M")
-    file_name = f"/Users/Hiroki/Applications/PythonProjects/cotoha_test/src/log/{date_time}_cotoha.log"
+    file_name = f"./log/{date_time}_cotoha.log"
     logger = getLogger()
     stream_handler = StreamHandler()
     file_handler = FileHandler(file_name)

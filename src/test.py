@@ -21,6 +21,13 @@ if __name__ == "__main__":
             logger.info(f'message: {res.message}')
             for i in res.result:
                 print(json.dumps(i, indent=4, ensure_ascii=False))
+
+            res = cotoha.sentiment(input_str)
+            logger.info(f'status: {res.status}')
+            logger.info(f'message: {res.message}')
+            if res.status == 0:
+                logger.info(f'{round(res.result.get("score") * 100, 1)}%の確率で、{res.result.get("sentiment")}')
+
         except KeyboardInterrupt:
             print()
             break

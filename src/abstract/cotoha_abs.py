@@ -1,9 +1,12 @@
+import os
 from abc import ABCMeta
 from configparser import ConfigParser
 from enum import Enum, auto
 from typing import Dict, Any, Tuple, Union, List
 
-CONFIG_FILE_PATH = "/Users/Hiroki/Applications/PythonProjects/cotoha_test/src/setting/setting.conf"
+from src.logger.logger import LoggerUtils
+
+CONFIG_FILE_PATH = "./setting/setting.conf"
 CONFIG_KEY = "settings"
 ENCODING = 'utf-8'
 
@@ -52,10 +55,24 @@ class CotohaApiAbc(metaclass=ABCMeta):
         self.__access_token = access_token
         return
 
+    @access_token.deleter
+    def access_token(self):
+        self.__access_token = ''
+        return
+
     def get_access_token(self):
         pass
 
-    def architecture_analyze_api(self, sentence: str, req_body) -> Dict[str, Any]:
+    def architecture_analyze_api(self, sentence: str, req_body):
+        pass
+
+    def get_keyword_api(self, sentence: str, req_body):
+        pass
+
+    def calc_similarity(self, string1, string2, req_body):
+        pass
+
+    def sentiment(self, sentence: str):
         pass
 
 
@@ -67,7 +84,7 @@ class CotohaResponseAbc(metaclass=ABCMeta):
         return
 
     @property
-    def result(self) -> List[Dict[str, Any]]:
+    def result(self) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         return self.__result
 
     @property
@@ -80,6 +97,7 @@ class CotohaResponseAbc(metaclass=ABCMeta):
 
 
 def get_config() -> Tuple[str, str]:
+    logger = LoggerUtils.get_instance()
     config = ConfigParser()
     config.read(CONFIG_FILE_PATH)
 
