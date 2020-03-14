@@ -1,7 +1,8 @@
-from logging import DEBUG, Formatter, StreamHandler, getLogger, Logger
+from datetime import datetime
+from logging import DEBUG, Formatter, StreamHandler, getLogger, FileHandler, INFO
 
 
-class LoggerUtils():
+class LoggerUtils:
     """
     First call def logger_initialze(self).
     and use get_instance.
@@ -23,14 +24,22 @@ class LoggerUtils():
 
         return cls.__unique_instance
 
-def logger_initialze():
+
+def logger_initialize():
     """
     logger initializer
     """
+    date_time = datetime.now().strftime("%Y%m%d%H%M")
+    file_name = f"/Users/Hiroki/Applications/PythonProjects/cotoha_test/src/log/{date_time}_cotoha.log"
     logger = getLogger()
-    handler = StreamHandler()
+    stream_handler = StreamHandler()
+    file_handler = FileHandler(file_name)
     formatter = Formatter('%(asctime)s - %(name)s - %(process)d - %(levelname)s - %(message)s')
-    handler.setLevel(DEBUG)
-    handler.setFormatter(formatter)
+
+    stream_handler.setLevel(DEBUG)
+    stream_handler.setFormatter(formatter)
+    file_handler.setLevel(INFO)
+    file_handler.setFormatter(formatter)
     logger.setLevel(DEBUG)
-    logger.addHandler(handler)
+    logger.addHandler(stream_handler)
+    logger.addHandler(file_handler)

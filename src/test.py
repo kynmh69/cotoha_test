@@ -1,16 +1,24 @@
+import json
 from configparser import ConfigParser
 
+from src.abstract.cotoha_abs import ENCODING
 from src.cotoha_api.cotoha_api import CotohaApi
-from src.logger.logger import logger_initialze, LoggerUtils
+from src.logger.logger import logger_initialize, LoggerUtils
 
 
 EQUAL_STR = "=" * 20
 
 if __name__ == "__main__":
-    logger_initialze()
+    logger_initialize()
     logger = LoggerUtils.get_instance()
     logger.info(f"{EQUAL_STR} START {EQUAL_STR}")
-
     cotoha = CotohaApi()
-    cotoha.architecture_analyze_api('昨日母と銀座で焼肉を食べた')
+    while True:
+        try:
+            input_str = input('> ')
+            cotoha.architecture_analyze_api(input_str)
+        except KeyboardInterrupt:
+            print()
+            break
+
     logger.info(f"{EQUAL_STR} END {EQUAL_STR}")
