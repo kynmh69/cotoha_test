@@ -1,13 +1,14 @@
 from abc import ABCMeta
 from configparser import ConfigParser
-from typing import Dict, Any, Tuple
+from enum import Enum, auto
+from typing import Dict, Any, Tuple, Union, List
 
 CONFIG_FILE_PATH = "/Users/Hiroki/Applications/PythonProjects/cotoha_test/src/setting/setting.conf"
 CONFIG_KEY = "settings"
 ENCODING = 'utf-8'
 
 
-class CotohaAbc(metaclass=ABCMeta):
+class CotohaApiAbc(metaclass=ABCMeta):
     __url: str
 
     def __init__(self, client_id=None, client_secret=None):
@@ -54,8 +55,28 @@ class CotohaAbc(metaclass=ABCMeta):
     def get_access_token(self):
         pass
 
-    def architecture_analyze_api(self, sentence: str) -> Dict[str, Any]:
+    def architecture_analyze_api(self, sentence: str, req_body) -> Dict[str, Any]:
         pass
+
+
+class CotohaResponseAbc(metaclass=ABCMeta):
+    def __init__(self, result: List[Dict[str, Any]], status: int, message: str):
+        self.__result: List[Dict[str, Any]] = result
+        self.__status: int = status
+        self.__message = message
+        return
+
+    @property
+    def result(self) -> List[Dict[str, Any]]:
+        return self.__result
+
+    @property
+    def status(self) -> int:
+        return self.__status
+
+    @property
+    def message(self) -> str:
+        return self.__message
 
 
 def get_config() -> Tuple[str, str]:

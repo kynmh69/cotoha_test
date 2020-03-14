@@ -2,7 +2,7 @@ import json
 from configparser import ConfigParser
 
 from src.abstract.cotoha_abs import ENCODING
-from src.cotoha_api.cotoha_api import CotohaApi
+from src.cotoha_api.cotoha_api import CotohaApi, CotohaApiResponse
 from src.logger.logger import logger_initialize, LoggerUtils
 
 
@@ -16,7 +16,11 @@ if __name__ == "__main__":
     while True:
         try:
             input_str = input('> ')
-            cotoha.architecture_analyze_api(input_str)
+            res: CotohaApiResponse = cotoha.architecture_analyze_api(input_str, )
+            logger.info(f'status: {res.status}')
+            logger.info(f'message: {res.message}')
+            for i in res.result:
+                print(json.dumps(i, indent=4, ensure_ascii=False))
         except KeyboardInterrupt:
             print()
             break
