@@ -61,6 +61,12 @@ class CotohaApi(CotohaApiAbc):
 
     def architecture_analyze_api(self, sentence: str, req_body: RequestBody = RequestBody.default.name) \
             -> CotohaApiResponse:
+        """
+        構文解析
+        :param sentence:
+        :param req_body:
+        :return:
+        """
         self.__logger.debug(self)
         header = {
             "Content-Type": "application/json;charset=UTF-8",
@@ -70,12 +76,14 @@ class CotohaApi(CotohaApiAbc):
             "sentence": sentence,
             "type": req_body
         }
-        response: Response = post(self.uri + '/nlp/v1/parse', headers=header, json=payload)
-        self.__logger.debug(f'Response: {response.json()}')
-        return CotohaApiResponse(response.json().get('result'), response.json().get('status'),
-                                 response.json().get('message'))
+        return self.post('/nlp/v1/parse', payload, header)
 
     def sentiment(self, sentence: str) -> CotohaApiResponse:
+        """
+        感情分析API
+        :param sentence:
+        :return:
+        """
         self.__logger.debug(self)
         header = {
             "Content-Type": "application/json;charset=UTF-8",
@@ -84,7 +92,36 @@ class CotohaApi(CotohaApiAbc):
         payload = {
             "sentence": sentence
         }
-        response: Response = post(self.uri + '/nlp/v1/sentiment', headers=header, json=payload)
+        return self.post('/nlp/v1/sentiment', payload, header)
+
+    def named_entity_extraction(self, sentence, req_body: RequestBody = RequestBody.default.name)\
+            -> CotohaApiResponse:
+        """
+        固有表現抽出
+        :param sentence:
+        :param req_body:
+        :return:
+        """
+        self.__logger.debug(self)
+        header = {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Authorization": f"Bearer {self.access_token}"
+        }
+        payload = {
+            "sentence": sentence,
+            "type": req_body
+        }
+        return self.post('/nlp/v1/ne', payload, header)
+
+    def post(self, resource: str, payload: dict, header: dict) -> CotohaApiResponse:
+        """
+        Request to API.
+        :param resource:
+        :param payload:
+        :param header:
+        :return:
+        """
+        response: Response = post(self.uri + resource, headers=header, json=payload)
         self.__logger.debug(f'Response: {response.json()}')
         return CotohaApiResponse(response.json().get('result'), response.json().get('status'),
                                  response.json().get('message'))

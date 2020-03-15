@@ -1,10 +1,7 @@
 import json
-from configparser import ConfigParser
 
-from src.abstract.cotoha_abs import ENCODING
 from src.cotoha_api.cotoha_api import CotohaApi, CotohaApiResponse
 from src.logger.logger import logger_initialize, LoggerUtils
-
 
 EQUAL_STR = "=" * 20
 
@@ -16,6 +13,8 @@ if __name__ == "__main__":
     while True:
         try:
             input_str = input('> ')
+            if input_str == 'x':
+                break
             res: CotohaApiResponse = cotoha.architecture_analyze_api(input_str, )
             logger.info(f'status: {res.status}')
             logger.info(f'message: {res.message}')
