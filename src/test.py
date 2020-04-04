@@ -11,8 +11,5 @@ if __name__ == "__main__":
     logger_initialize()
     logger = LoggerUtils.get_instance()
     logger.info(f"{EQUAL_STR} START {EQUAL_STR}")
-    root = Tk()
-    root.wm_title("Cotoha API")
-    app = Application(master=root)
-    app.mainloop()
+
     logger.info(f"{EQUAL_STR} END {EQUAL_STR}")

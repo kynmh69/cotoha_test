@@ -1,26 +1,41 @@
-from tkinter import Frame, Button
+from tkinter import Frame, Button, Entry, Tk, Menubutton
+from typing import Union
 
 from cotoha_api.cotoha_api import CotohaApi
 from logger.logger import LoggerUtils
 
 
-class Application(Frame):
+class Application:
     def __init__(self, master=None):
-        super().__init__(master)
-        self.master = master
-        self.logger = LoggerUtils.get_instance()
-        self.pack()
-        self.create_widgets()
+        self.__master: Union[None, Tk] = None
+        self.__logger = LoggerUtils.get_instance()
+        self.__sentence_entry: Union[None, Entry] = None
+        self.__result_entry: Union[None, Entry] = None
+        self.__submit_button: Union[None, Button] = None
+        self.__menu_button: Union[None, Menubutton] = None
+        return
 
-    def create_widgets(self):
-        cotoha_api = CotohaApi()
-        hi_there = Button(self)
-        hi_there["text"] = "DO API \n(click me)"
-        sentence = "KDDI株式会社"
-        self.logger.info(sentence)
-        hi_there["command"] = lambda: cotoha_api.named_entity_extraction(sentence)
-        hi_there.pack(side="top")
+    @property
+    def master(self):
+        """
+        Master of Tk().
+        :return:
+        """
+        return self.__master
 
-        quit_ = Button(self, text="QUIT", fg="red",
-                       command=self.master.destroy)
-        quit_.pack(side="bottom")
+    def create_window(self) -> None:
+        """
+        Create window.
+        :return:
+        """
+        self.__master = Tk()
+        self.__master.title('Cotoha API')
+        self.__master.geometry('1920x1080')
+        return
+
+    def create_form(self) -> None:
+        """
+        Create Form
+        :return:
+        """
+        self.__sentence_entry = Entry(self.__master)
