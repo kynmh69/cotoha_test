@@ -1,7 +1,6 @@
-from tkinter import Frame, Button, Entry, Tk, Menubutton
+from tkinter import Button, Entry, Tk, Menubutton, Label, TOP, BOTTOM
 from typing import Union
 
-from cotoha_api.cotoha_api import CotohaApi
 from logger.logger import LoggerUtils
 
 
@@ -33,10 +32,13 @@ class Application:
         self.__master.geometry('1920x1080')
         return
 
-    def create_form(self) -> None:
+    def create_sentence_form(self) -> None:
         """
         Create Form
         :return:
         """
-        self.__sentence_entry = Entry(self.__master)
+        label = Label(self.__master, text='Sentence')
+        label.pack(side=TOP)
+        self.__sentence_entry = Entry(self.__master, bd=2)
+        self.__sentence_entry.pack(BOTTOM)
         return
