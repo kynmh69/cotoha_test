@@ -39,3 +39,4 @@ class Application:
         :return:
         """
         self.__sentence_entry = Entry(self.__master)
+        return
